@@ -1,5 +1,7 @@
 """Read-only channel and conversation queries over an existing extracted database."""
 
+from __future__ import annotations
+
 import re
 import sqlite3
 from collections import defaultdict
@@ -60,7 +62,7 @@ def timestamp_utc(value: int | None) -> str | None:
         return datetime.fromtimestamp(value / q.MILLISECONDS_PER_SECOND, UTC).isoformat(
             timespec=q.ISO_TIMESPEC
         )
-    except ValueError, OverflowError, OSError:
+    except (ValueError, OverflowError, OSError):
         raise BackupError(
             "Database contains a timestamp outside the supported date range."
         ) from None
@@ -83,7 +85,7 @@ def parse_date_bound(value: str | None, *, end: bool = False) -> int | None:
         if milliseconds < 0 or milliseconds > c.MAX_SQLITE_INTEGER - increment:
             raise ValueError
         return milliseconds + increment if end else milliseconds
-    except ValueError, OverflowError, OSError:
+    except (ValueError, OverflowError, OSError):
         raise BackupError(
             "Dates must be ISO 8601 dates/times or nonnegative epoch milliseconds."
         ) from None

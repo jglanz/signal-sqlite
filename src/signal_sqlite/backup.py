@@ -239,7 +239,7 @@ def extract_backup(
                 )
             os.replace(staging, output)
             staging = None
-        except DecodeError, gzip.BadGzipFile, EOFError, zlib.error:
+        except (DecodeError, gzip.BadGzipFile, EOFError, zlib.error):
             raise BackupError("Backup contains invalid protobuf or compressed data.") from None
         except sqlite3.Error:
             raise BackupError(

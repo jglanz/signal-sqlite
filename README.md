@@ -5,14 +5,28 @@ and decrypted attachment files. The expected input is a `SignalBackups/` directo
 containing timestamped snapshots (`main`, `metadata`, `files`) and a shared
 `files/` media directory. The original backup is read without modification.
 
-## Setup
+## Install
 
-Use Python 3.15.2 and Hatch. The root `pyproject.toml` is the dependency manifest;
+Requires Python 3.12 or newer. Install the `signal-sqlite` command from PyPI
+into an isolated environment:
+
+```bash
+pipx install signal-sqlite
+# or
+uv tool install signal-sqlite
+
+signal-sqlite --help
+```
+
+## Development setup
+
+Use Python 3.12+ and Hatch. The root `pyproject.toml` is the dependency manifest;
 Hatch creates the project-local `.venv` using its virtual environment type.
 
 ```bash
-uv python install 3.15.2
-cd /data/shared/code/projects/signal-backup-to-sqlite
+uv python install 3.12
+git clone https://github.com/jglanz/signal-sqlite.git
+cd signal-sqlite
 hatch env create
 hatch run signal-sqlite --help
 ```
@@ -27,10 +41,10 @@ signal-sqlite extract-backup [--skip-attachments] [--key-file PATH] INPUT_PATH O
 ```
 
 ```bash
-hatch run signal-sqlite extract-backup \
+signal-sqlite extract-backup \
   --key-file /run/user/1000/signal-backup.key \
-  /home/jglanz/Dropbox/Documents/SignalAppBackups/SignalBackups \
-  /data/shared/code/projects/signal-backup-to-sqlite/output
+  ~/SignalBackups \
+  ./output
 ```
 
 Both positional paths are required. `INPUT_PATH` accepts the backup root or a
@@ -259,3 +273,7 @@ Unknown protobuf fields remain in original record BLOBs even when they cannot be
 represented in normalized tables. This tool creates an analysis database; it
 does not restore a Signal installation, fetch remote media, or parse older
 Android single-file backups or the live Signal Desktop SQLCipher database.
+
+## License
+
+GNU Affero General Public License v3.0 only (`AGPL-3.0-only`). See `LICENSE`.
