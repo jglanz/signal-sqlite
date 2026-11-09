@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "signal-sqlite"
-version = "0.1.1"
+version = "1.0.0"
 description = "Extract Signal backups to searchable SQLite; query and browse channels and conversations with a CLI and TUI."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -14,7 +14,7 @@ authors = [{ name = "Jonathan Glanz", email = "jonathan.glanz@gmail.com" }]
 maintainers = [{ name = "Jonathan Glanz", email = "jonathan.glanz@gmail.com" }]
 keywords = ["signal", "backup", "sqlite", "export", "messenger"]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "Intended Audience :: End Users/Desktop",
   "Operating System :: OS Independent",
