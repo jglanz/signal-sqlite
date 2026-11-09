@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "signal-sqlite"
-version = "0.1.0"
-description = "Extract Signal local backup snapshots into searchable SQLite and attachments"
+version = "0.1.1"
+description = "Extract Signal backups to searchable SQLite; query and browse channels and conversations with a CLI and TUI."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "AGPL-3.0-only"

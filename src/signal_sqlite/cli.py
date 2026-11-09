@@ -25,7 +25,7 @@ PROMPT_RECOVERY_KEY = "Signal recovery key (hidden)"
     type=click.Choice((q.FORMAT_TEXT, q.FORMAT_JSON)),
     default=q.FORMAT_TEXT,
     show_default=True,
-    help="Output format for extraction and query commands.",
+    help="Output format for extraction, query, and TUI output.",
 )
 @click.option(
     q.SHORT_OPTION_DATABASE,
@@ -33,11 +33,11 @@ PROMPT_RECOVERY_KEY = "Signal recovery key (hidden)"
     type=click.Path(path_type=Path),
     default=q.DEFAULT_DATABASE,
     show_default=True,
-    help="Existing SQLite database or export directory for query commands.",
+    help="Existing SQLite database or export directory for query commands and the TUI.",
 )
 @click.pass_context
 def cli(context: click.Context, output_format: str, database: Path) -> None:
-    """Extract Signal backups and query channels and conversations."""
+    """Extract Signal backups, query channels and conversations, or browse them in a TUI."""
     context.obj = CLIOptions(output_format=output_format, database=database)
 
 

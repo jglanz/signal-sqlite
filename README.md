@@ -1,9 +1,15 @@
 # Signal SQLite
 
-Extract Signal's newer **local backup v2 directory format** into searchable SQLite
-and decrypted attachment files. The expected input is a `SignalBackups/` directory
-containing timestamped snapshots (`main`, `metadata`, `files`) and a shared
-`files/` media directory. The original backup is read without modification.
+Signal SQLite turns Signal's newer **local backup v2 directory format** into a
+searchable SQLite database and, by default, decrypted attachment files. Use the
+CLI to extract a backup, list and search channels, and read conversation history
+as text or JSON. Use the interactive Textual TUI to browse channels and
+conversations, inspect filtered message ranges, and preview or save output. The
+same export powers both the query commands and the TUI; querying it is read-only.
+
+The expected input is a `SignalBackups/` directory containing timestamped
+snapshots (`main`, `metadata`, `files`) and a shared `files/` media directory. The
+original backup is read without modification.
 
 ## Install
 
@@ -18,6 +24,29 @@ uv tool install signal-sqlite
 signal-sqlite --help
 ```
 
+## Quick start
+
+Extract a backup into a new output directory. Without `--key-file`, the command
+prompts for the recovery key with hidden input in an interactive terminal.
+
+```bash
+signal-sqlite extract-backup ~/SignalBackups ./signal-export
+```
+
+Then use the generated database to list channels, search channel names or
+participants, read a conversation, or open the TUI:
+
+```bash
+signal-sqlite --database ./signal-export channels list
+signal-sqlite --database ./signal-export channels search 'Alice'
+signal-sqlite --database ./signal-export conversations get CHANNEL_ID
+signal-sqlite --database ./signal-export tui
+```
+
+`CHANNEL_ID` is the channel ID shown by `channels list`. The `--database` option
+also accepts the export directory itself; the default is `output/signal.sqlite3`
+relative to the current working directory.
+
 ## Development setup
 
 Use Python 3.12+ and Hatch. The root `pyproject.toml` is the dependency manifest;
@@ -29,6 +58,7 @@ git clone https://github.com/jglanz/signal-sqlite.git
 cd signal-sqlite
 hatch env create
 hatch run signal-sqlite --help
+hatch run check
 ```
 
 Dependencies stay inside the virtual environment. Python source is in
@@ -96,16 +126,14 @@ output. Outputs are plaintext and include the backup's original account/message
 records; treat them as private. New directories are mode `0700`, new files `0600`,
 including any newly created intermediate directories.
 
-## Output and search
+## Commands, output, and search
 
-### Query commands
+### Command reference
 
 Queries open an existing export read-only; no recovery key or re-extraction is
-needed. Global options go **before** the command:
-
-```text
-signal-sqlite [-f/--format text|json] [-d/--database PATH] COMMAND ...
-```
+needed. The global options `-f/--format text|json` and `-d/--database PATH` go
+**before** the command. `--format` applies to extraction and query output and
+selects the initial TUI output preview format.
 
 The default format is `text`. The default database is `output/signal.sqlite3`,
 relative to the working directory. `--database` accepts either a SQLite file or
@@ -113,20 +141,34 @@ an export directory containing `signal.sqlite3`.
 
 | Command | Aliases | Options |
 | --- | --- | --- |
-| `channels list` | `ch`, `all` | `--page`, `--page-size` |
-| `channels search QUERY` | `ch`, `match` | Paging, `--regex` / `--exp` / `-r`, `--include-messages` |
-| `conversations get CHANNEL_ID` | `convo` / `co`, `g` | `--offset`, `--limit`, `--since`, `--until`, `--search`, regex flags, `--include-revisions` |
+| `extract-backup INPUT_PATH OUTPUT_PATH` | — | `--key-file PATH`, `--skip-attachments` |
+| `channels list` | `ch all` | `--page`, `--page-size` |
+| `channels search QUERY` | `ch match` | `--page`, `--page-size`, `--regex` / `--exp` / `-r`, `--include-messages` |
+| `conversations get CHANNEL_ID` | `convo get`, `co get`, `co g` | `--offset`, `--limit`, `--since`, `--until`, `--search`, regex flags, `--include-revisions` |
+| `tui` | — | Opens the interactive browser for the selected database |
 
-Group and subcommand aliases can be combined, for example `ch all`,
-`ch match`, or `co g`.
+The query aliases can be combined: `ch` is an alias for `channels`, `all` for
+`channels list`, `match` for `channels search`, `convo` and `co` for
+`conversations`, and `g` for `conversations get`.
+
+Command-specific options follow the command:
+
+```text
+signal-sqlite [-f/--format text|json] [-d/--database PATH] COMMAND ...
+signal-sqlite extract-backup [--key-file PATH] [--skip-attachments] INPUT_PATH OUTPUT_PATH
+signal-sqlite channels list [--page N] [--page-size N]
+signal-sqlite channels search [--page N] [--page-size N] [--regex] [--include-messages] QUERY
+signal-sqlite conversations get [--offset N] [--limit N] [--since DATE] [--until DATE] [--search TEXT] [--regex] [--include-revisions] CHANNEL_ID
+signal-sqlite tui
+```
 
 ```bash
-hatch run signal-sqlite channels list --page 1 --page-size 25
-hatch run signal-sqlite ch match 'Alice'
-hatch run signal-sqlite channels search --regex --include-messages 'contract|employment'
-hatch run signal-sqlite --format text conversations get 187
-hatch run signal-sqlite --format json co g 187 --since 2026-01-01 --until 2026-11-08
-hatch run signal-sqlite --database /path/to/export convo get 187 --offset 20 --limit 50
+signal-sqlite channels list --page 1 --page-size 25
+signal-sqlite ch match 'Alice'
+signal-sqlite channels search --regex --include-messages 'contract|employment'
+signal-sqlite --format text conversations get 187
+signal-sqlite --format json co g 187 --since 2026-01-01 --until 2026-11-08
+signal-sqlite --database /path/to/export convo get 187 --offset 20 --limit 50
 ```
 
 Channels are ordered by most recent activity, then numeric channel ID. Each
@@ -174,13 +216,12 @@ to stderr so stdout contains exactly one JSON object.
 ### Terminal UI
 
 ```bash
-hatch run signal-sqlite tui
-hatch run signal-sqlite --database /path/to/export tui
+signal-sqlite tui
+signal-sqlite --database /path/to/export tui
 ```
 
-The TUI uses Textual, installed by Hatch from the runtime dependencies in
-`pyproject.toml`. It shares the read-only query layer with the CLI and has three
-tabs:
+The TUI is installed with the package and uses the same read-only query layer as
+the CLI. It has three tabs:
 
 - **Channels:** participant/group search, regex and message matching, a keyboard
   navigable table, and Previous/Next paging. Select a row and press Enter to open

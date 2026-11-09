@@ -1,6 +1,6 @@
-"""Local, authenticated Signal backup extraction."""
+"""Extract, search, and browse local Signal backups with SQLite, a CLI, and a TUI."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class BackupError(Exception):
