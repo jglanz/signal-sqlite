@@ -1,0 +1,134 @@
+"""Shared format, filesystem, CLI, and manifest contracts."""
+
+from typing import Final
+
+PROJECT_NAME: Final = "signal-sqlite"
+COMMAND_EXTRACT_BACKUP: Final = "extract-backup"
+OPTION_KEY_FILE: Final = "--key-file"
+OPTION_SKIP_ATTACHMENTS: Final = "--skip-attachments"
+INPUT_ARGUMENT: Final = "input_path"
+OUTPUT_ARGUMENT: Final = "output_path"
+OPTION_HELP_SHORT: Final = "-h"
+OPTION_HELP: Final = "--help"
+OPTION_VERSION: Final = "--version"
+CLICK_HELP_OPTION_NAMES_KEY: Final = "help_option_names"
+CLI_CONTEXT_SETTINGS: Final = {
+    CLICK_HELP_OPTION_NAMES_KEY: [OPTION_HELP_SHORT, OPTION_HELP],
+}
+EXIT_INCOMPLETE: Final = 1
+UTF8: Final = "utf-8"
+KEY_TEXT_ENCODING: Final = "utf-8-sig"
+READ_BINARY: Final = "rb"
+WRITE_BINARY: Final = "wb"
+READ_WRITE_BINARY: Final = "w+b"
+WRITE_TEXT: Final = "w"
+DIRECTORY_MODE: Final = 0o700
+FILE_MODE: Final = 0o600
+PRIVATE_UMASK: Final = 0o077
+OTHER_PERMISSION_BITS: Final = 0o077
+BUFFER_SIZE_BYTES: Final = 1024 * 1024
+SPOOL_MEMORY_LIMIT_BYTES: Final = 8 * 1024 * 1024
+MAX_FRAME_SIZE_BYTES: Final = 64 * 1024 * 1024
+MAX_KEY_FILE_SIZE_BYTES: Final = 16 * 1024
+MAX_LONG_TEXT_SIZE_BYTES: Final = 64 * 1024 * 1024
+MAX_PROTO_DEPTH: Final = 64
+MAX_VARINT_BYTES: Final = 10
+VARINT_VALUE_MASK: Final = 0x7F
+VARINT_CONTINUATION_MASK: Final = 0x80
+VARINT_SHIFT_BITS: Final = 7
+MAX_SQLITE_INTEGER: Final = (1 << 63) - 1
+KEY_LENGTH: Final = 64
+KEY_PATTERN: Final = rf"[a-z0-9]{{{KEY_LENGTH}}}"
+DISPLAY_LETTER_O: Final = "#"
+DISPLAY_DIGIT_ZERO: Final = "="
+CANONICAL_LETTER_O: Final = "o"
+CANONICAL_DIGIT_ZERO: Final = "0"
+KEY_DISPLAY_TRANSLATION: Final = str.maketrans(
+    {
+        DISPLAY_LETTER_O: CANONICAL_LETTER_O,
+        DISPLAY_DIGIT_ZERO: CANONICAL_DIGIT_ZERO,
+    }
+)
+SHA256_NAME: Final = "sha256"
+BACKUP_KEY_LENGTH: Final = 32
+PLAINTEXT_HASH_LENGTH: Final = 32
+AES_KEY_LENGTH: Final = 32
+HMAC_LENGTH: Final = 32
+COMBINED_KEY_LENGTH: Final = AES_KEY_LENGTH + HMAC_LENGTH
+AES_IV_LENGTH: Final = 16
+AES_BLOCK_BITS: Final = 128
+METADATA_IV_LENGTH: Final = 12
+BACKUP_ID_LENGTH: Final = 16
+BACKUP_KEY_INFO: Final = b"20240801_SIGNAL_BACKUP_KEY"
+METADATA_KEY_INFO: Final = b"20241011_SIGNAL_LOCAL_BACKUP_METADATA_KEY"
+MESSAGE_KEY_INFO: Final = b"20241007_SIGNAL_BACKUP_ENCRYPT_MESSAGE_BACKUP:"
+SUPPORTED_METADATA_VERSION: Final = 1
+SUPPORTED_BACKUP_VERSION: Final = 1
+DATABASE_SCHEMA_VERSION: Final = 1
+SNAPSHOT_PATTERN: Final = r"signal-backup-\d{4}(?:-\d{2}){5}"
+MAIN_NAME: Final = "main"
+METADATA_NAME: Final = "metadata"
+FILES_NAME: Final = "files"
+DATABASE_NAME: Final = "signal.sqlite3"
+ATTACHMENTS_NAME: Final = "attachments"
+MANIFEST_NAME: Final = "manifest.json"
+STAGING_PREFIX: Final = ".signal-sqlite-"
+ALL_ENTRIES_GLOB: Final = "*"
+MEDIA_NAME_PATTERN: Final = r"[0-9a-f]{64}"
+MEDIA_PREFIX_LENGTH: Final = 2
+PATH_SEPARATOR: Final = "."
+TEXT_SEPARATOR: Final = "\n"
+NAME_SEPARATOR: Final = " "
+UNKNOWN_KIND: Final = "unknown"
+HEADER_KIND: Final = "backupInfo"
+FIELD_ITEM: Final = "item"
+FIELD_DESTINATION: Final = "destination"
+FIELD_DIRECTION: Final = "directionalDetails"
+FIELD_REVISIONS: Final = "revisions"
+FIELD_MEDIA_NAME: Final = "mediaName"
+FIELD_PLAINTEXT_HASH: Final = "plaintextHash"
+KIND_ACCOUNT: Final = "account"
+KIND_RECIPIENT: Final = "recipient"
+KIND_CHAT: Final = "chat"
+KIND_CHAT_ITEM: Final = "chatItem"
+KIND_CONTACT: Final = "contact"
+KIND_GROUP: Final = "group"
+KIND_SELF: Final = "self"
+KIND_STANDARD_MESSAGE: Final = "standardMessage"
+KIND_STORY_REPLY: Final = "directStoryReplyMessage"
+DIRECTION_INCOMING: Final = "incoming"
+DIRECTION_OUTGOING: Final = "outgoing"
+STATUS_EXPORTED: Final = "exported"
+STATUS_SKIPPED: Final = "skipped"
+STATUS_UNAVAILABLE: Final = "unavailable"
+STATUS_MISSING: Final = "missing"
+STATUS_FAILED: Final = "failed"
+ATTACHMENT_FAILURE_STATUSES: Final = frozenset({STATUS_MISSING, STATUS_FAILED})
+LONG_TEXT_FIELD_NAME: Final = "longText"
+SAFE_SUFFIX_PATTERN: Final = r"\.[A-Za-z0-9]{1,10}"
+PART_SUFFIX: Final = ".part"
+STRING_FIELD_TYPE: Final = 9
+JSON_INDENT: Final = 2
+JSON_KEY_TOOL: Final = "tool"
+JSON_KEY_TOOL_VERSION: Final = "tool_version"
+JSON_KEY_SCHEMA_VERSION: Final = "schema_version"
+JSON_KEY_SOURCE: Final = "source_snapshot"
+JSON_KEY_BACKUP_VERSION: Final = "backup_version"
+JSON_KEY_BACKUP_TIME: Final = "backup_time_ms"
+JSON_KEY_APP_VERSION: Final = "source_app_version"
+JSON_KEY_SOURCE_HASHES: Final = "source_sha256"
+JSON_KEY_COUNTS: Final = "counts"
+JSON_KEY_COMPLETE: Final = "complete"
+JSON_KEY_SKIP_ATTACHMENTS: Final = "skip_attachments"
+JSON_KEY_CREATED: Final = "created_at_utc"
+JSON_KEY_WARNINGS: Final = "warnings"
+COUNT_FRAMES: Final = "frames"
+COUNT_UNKNOWN_FRAMES: Final = "unknown_frames"
+COUNT_RECIPIENTS: Final = "recipients"
+COUNT_CHATS: Final = "chats"
+COUNT_MESSAGES: Final = "messages"
+COUNT_REVISIONS: Final = "revisions"
+COUNT_ATTACHMENTS: Final = "attachments"
+COUNT_ATTACHMENT_STATUSES: Final = "attachment_statuses"
+COUNT_LISTED_MEDIA: Final = "listed_media_files"
+COUNT_REFERENCED_MEDIA: Final = "referenced_media_files"

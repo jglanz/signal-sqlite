@@ -1,0 +1,81 @@
+Screen {
+    background: $background;
+}
+#database {
+    height: 1;
+    padding: 0 1;
+    color: $text-muted;
+}
+#channel-table {
+    height: 1fr;
+}
+.toolbar {
+    height: auto;
+    min-height: 3;
+}
+.toolbar > Checkbox {
+    width: auto;
+}
+.toolbar > Button {
+    min-width: 8;
+    width: auto;
+    margin-right: 1;
+}
+.toolbar > Select {
+    width: 1fr;
+}
+#channel-status, #message-status {
+    height: auto;
+    min-height: 1;
+    color: $text-muted;
+}
+#view-tabs, TabPane {
+    height: 1fr;
+}
+#conversation-header {
+    height: auto;
+    max-height: 6;
+    overflow-y: auto;
+    padding: 0 1;
+    color: $text-muted;
+}
+#conversation-search, #since, #until {
+    width: 1fr;
+}
+#message-list {
+    height: 1fr;
+    padding: 0 1;
+}
+.message-row {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1;
+    align-horizontal: left;
+}
+.message-row.mine {
+    align-horizontal: right;
+}
+.message-bubble {
+    width: auto;
+    max-width: 90%;
+    height: auto;
+    padding: 1 2;
+    background: $surface;
+    border-left: thick $secondary;
+}
+.mine > .message-bubble {
+    background: $primary 20%;
+    border-left: none;
+    border-right: thick $primary;
+}
+#output-preview {
+    height: 1fr;
+}
+#output-path {
+    width: 1fr;
+}
+#status {
+    height: 1;
+    color: $text-muted;
+    padding: 0 1;
+}
